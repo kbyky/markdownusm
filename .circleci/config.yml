@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/python:3.9.2-node-browsers-legacy
+    steps:
+      - checkout
+      - run:
+          command: |
+            poetry install
+      - run:
+          command: |
+            poetry run python -m pytest -v --capture=no
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test

@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "markdownusm"
+version = "0.1.0"
+description = "MarkdownUSM is the best way to draw a beautiful user story mapping diagram from simple markdown file."
+authors = ["kbyky"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pydantic = "^1.8.2"
+Jinja2 = "^3.0.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+flake8 = "^3.9.2"
+mypy = "^0.910"
+isort = "^5.9.3"
+black = "^21.9b0"
+icecream = "^2.1.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+musm = "markdownusm.cli:main"
