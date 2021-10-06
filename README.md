@@ -4,7 +4,7 @@
 MarkdownUSM is the best way to draw a beautiful user story mapping diagram from simple markdown file.\
 Markdown file will be converted to XML format then you can easily use the diagram on [draw.io](https://app.diagrams.net) and export in another format.
 
-![]("./../img/sample.svg)
+![](https://github.com/kbyky/public/blob/main/img/markdownusm.svg?raw=true)
 
 ## Installation
 ```
