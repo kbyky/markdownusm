@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "MarkdownUSM is the best way to draw a beautiful user story mapping diagram from simple markdown file."
 authors = ["kbyky"]
 license = "MIT"
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
