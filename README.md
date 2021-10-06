@@ -54,7 +54,7 @@ Story 6 &lt;br&gt; Next line
 The simplest way with:
 
 ```
-$ msum sample.md
+$ musm sample.md
 
 <mxfile>
     <diagram>
@@ -64,7 +64,7 @@ $ msum sample.md
 
 Output XML file with:
 ```
-$ msum -o sample.dio sample.md
+$ musm -o sample.dio sample.md
 ```
 
 ## License
