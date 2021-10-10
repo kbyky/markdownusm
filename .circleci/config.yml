@@ -1,4 +1,8 @@
-version: 2
+version: 2.1
+
+orbs:
+  codecov: codecov/codecov@3.1.1
+
 jobs:
   test:
     docker:
@@ -10,7 +14,10 @@ jobs:
             poetry install
       - run:
           command: |
-            poetry run python -m pytest -v --capture=no
+            poetry run python -m pytest -v --cov=library --cov-report=xml --capture=no -k "not integration"
+      - codecov/upload:
+        file: ./coverage.xml
+
 workflows:
   version: 2
   test:
