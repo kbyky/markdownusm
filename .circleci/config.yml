@@ -1,4 +1,8 @@
 version: 2
+
+orbs:
+  codecov: codecov/codecov@3.1.1
+
 jobs:
   test:
     docker:
@@ -11,6 +15,9 @@ jobs:
       - run:
           command: |
             poetry run python -m pytest -v --cov=library --cov-report=xml --capture=no -k "not integration"
+      - codecov/upload:
+        file: ./coverage.xml
+
 workflows:
   version: 2
   test:
