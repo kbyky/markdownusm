@@ -14,7 +14,7 @@ jobs:
             poetry install
       - run:
           command: |
-            poetry run python -m pytest -v --cov=library --cov-report=xml --capture=no -k "not integration"
+            poetry run python -m pytest -v --cov=markdownusm --cov-report=xml --capture=no -k "not integration"
       - codecov/upload:
           file: ./coverage.xml
 
