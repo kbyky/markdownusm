@@ -16,7 +16,7 @@ jobs:
           command: |
             poetry run python -m pytest -v --cov=library --cov-report=xml --capture=no -k "not integration"
       - codecov/upload:
-        file: ./coverage.xml
+          file: ./coverage.xml
 
 workflows:
   version: 2
