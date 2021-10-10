@@ -10,5 +10,9 @@
     },
     "python.linting.mypyArgs": [
         "--no-strict-optional",
+    ],
+    "python.linting.flake8Args": [
+        "--max-line-length",
+        "88"
     ]
 }
