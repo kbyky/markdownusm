@@ -1,3 +1,5 @@
 #!/usr/bin/bash
 
-poetry run python -m pytest -v --capture=no
+arg=${1:-"not integration"}
+
+poetry run python -m pytest -v --cov=markdownusm --cov-report=xml --capture=no -k "$arg"
