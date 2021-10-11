@@ -34,22 +34,22 @@ def test_constructor(parser):
 
 
 def test_extract_tasks(parser):
-    tested = parser.extract_tasks()
+    tested = parser._extract_tasks()
     assert tested == ["Task1", "Task2", "Task3"]
 
 
 def test_extract_activities_with_tasks(parser):
-    tested = parser.extract_activities_with_tasks()
+    tested = parser._extract_activities_with_tasks()
     assert tested == {"Activity1": "Task1", "Activity2": "Task3"}
 
 
 def test_extract_releases(parser):
-    tested = parser.extract_releases()
+    tested = parser._extract_releases()
     assert tested == ["Release1", "Release2", "Release3"]
 
 
 def test_extract_tasks_and_stories(parser):
-    tested = parser.extract_tasks_and_stories()
+    tested = parser._extract_tasks_and_stories()
     assert tested == [
         "## Task1",
         "Story1",
@@ -76,7 +76,7 @@ def test_divide_list_by_prefix(parser):
 
 
 def test_max_number_of_stories_in_each_release(parser):
-    tested = parser.max_number_of_stories_in_each_release()
+    tested = parser._max_number_of_stories_in_each_release()
     assert tested == [1, 1]
 
 
@@ -88,7 +88,7 @@ def test_extract_activities_with_position(parser):
     ]
 
 
-def test_extract_tasks_with_position(parser):
+def testextract_tasks_with_position(parser):
     tested = parser.extract_tasks_with_position()
     assert tested == [
         {"text": "Task1", "x": 0, "y": 1},
