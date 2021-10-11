@@ -36,7 +36,7 @@ jobs:
       - checkout
       - run:
           command: |
-            poetry config pypi-token.testpypi "${PYPI_TOKEN}"
+            poetry config pypi-token.pypi "${PYPI_TOKEN}"
             poetry publish --build
 
 workflows:
