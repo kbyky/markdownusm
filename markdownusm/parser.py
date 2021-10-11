@@ -253,7 +253,7 @@ class MarkdownParser(BaseModel):
 
         return result
 
-    def max_number_of_stories_in_each_release(self):
+    def max_number_of_stories_in_each_release(self) -> list[float]:
         """Identify maximum number of stories in each release
 
         Examples:
