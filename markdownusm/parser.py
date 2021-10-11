@@ -32,8 +32,8 @@ class MarkdownParser(BaseModel):
             {"text": "Activity2", "x": 2, "y": 0},
         ]
         """
-        tasks: list[str] = self.extract_tasks()
-        activities_with_tasks: dict[str, str] = self.extract_activities_with_tasks()
+        tasks: list[str] = self._extract_tasks()
+        activities_with_tasks: dict[str, str] = self._extract_activities_with_tasks()
 
         return [
             dict(text=k, x=tasks.index(v), y=0)
@@ -48,7 +48,7 @@ class MarkdownParser(BaseModel):
             {"text": "Task3", "x": 2, "y": 1},
         ]
         """
-        tasks: list[str] = self.extract_tasks()
+        tasks: list[str] = self._extract_tasks()
         return [dict(text=task, x=i, y=1) for i, task in enumerate(tasks)]
 
     def extract_stories_with_position(self) -> list[dict[str, U]]:
@@ -61,7 +61,7 @@ class MarkdownParser(BaseModel):
 
         """
         # tasks_and_stories: ['## Task', 'Story', '---', 'Story', ...]
-        tasks_and_stories = self.extract_tasks_and_stories()
+        tasks_and_stories = self._extract_tasks_and_stories()
 
         # [['Story1', 'Story2', '---', 'Story3'], ['---', 'Story4', 'Story5', '---', 'Story6'], ['Story7', '---', 'Story8']]
         split_by_task = self._divide_list_by_prefix(tasks_and_stories, "## ")[
@@ -86,7 +86,9 @@ class MarkdownParser(BaseModel):
         ]
         """
 
-        number_of_stories_in_each_release = self.max_number_of_stories_in_each_release()
+        number_of_stories_in_each_release = (
+            self._max_number_of_stories_in_each_release()
+        )
         # Adjustment in vertical position
         release_adjustment = list(
             accumulate([0] + number_of_stories_in_each_release[:-1])
@@ -125,8 +127,8 @@ class MarkdownParser(BaseModel):
             {"text": "Release2", "x": -1, "y": 2},
         ]
         """
-        releases = self.extract_releases()
-        number_of_stories = self.max_number_of_stories_in_each_release()
+        releases = self._extract_releases()
+        number_of_stories = self._max_number_of_stories_in_each_release()
         release_positions = list(accumulate([2] + number_of_stories[:-1]))
 
         return [
@@ -137,21 +139,21 @@ class MarkdownParser(BaseModel):
     def create_release_bars_with_position(self) -> list[dict[str, U]]:
         from itertools import accumulate
 
-        number_of_stories = self.max_number_of_stories_in_each_release()
+        number_of_stories = self._max_number_of_stories_in_each_release()
         number_of_stories_accumulate = list(accumulate([2] + number_of_stories[:-1]))
 
-        number_of_tasks = len(self.extract_tasks())
+        number_of_tasks = len(self._extract_tasks())
 
         return [
             dict(x=-1, width=number_of_tasks, y=y - 0.1)
             for y in number_of_stories_accumulate
         ]
 
-    def extract_tasks(self) -> list[str]:
+    def _extract_tasks(self) -> list[str]:
         """Create task list from markdonw
 
         Examples:
-            >>> extract_tasks("#Activity\n## Task1\n## Task2")
+            >>> _extract_tasks("#Activity\n## Task1\n## Task2")
             ['Task1', 'Task2', ...]
 
         """
@@ -162,11 +164,11 @@ class MarkdownParser(BaseModel):
             )
         )
 
-    def extract_activities_with_tasks(self) -> dict[str, str]:
+    def _extract_activities_with_tasks(self) -> dict[str, str]:
         """Create a dictionary whose keys are activities and values are tasks
 
         Examples:
-            >>> extract_activities_with_tasks("# Activity1\n## Task1\n## Task2")
+            >>> _extract_activities_with_tasks("# Activity1\n## Task1\n## Task2")
             {'Activity1': 'Task1', 'Activity1': 'Task2', ...}
 
         """
@@ -179,11 +181,11 @@ class MarkdownParser(BaseModel):
 
         return dic
 
-    def extract_releases(self) -> list[str]:
+    def _extract_releases(self) -> list[str]:
         """Create release list from markdown
 
         Examples:
-            >>> extract_releases("- Release1\n- Release2\n# Activity\n## Task)
+            >>> _extract_releases("- Release1\n- Release2\n# Activity\n## Task)
             ['Release1', 'Release2', ...]
         """
         return list(
@@ -193,13 +195,13 @@ class MarkdownParser(BaseModel):
             )
         )
 
-    def extract_tasks_and_stories(self) -> list[str]:
+    def _extract_tasks_and_stories(self) -> list[str]:
         """Create tasks(with #) and stories list from markdown
 
         Release separator will be included
 
         Examples:
-            >>> extract_tasks_and_stories("# Activity\n## Task1\nStory1\n---\nStory2")
+            >>> _extract_tasks_and_stories("# Activity\n## Task1\nStory1\n---\nStory2")
             ['## Task1', 'Story1', '---', 'Story2', ...]
 
         """
@@ -253,16 +255,16 @@ class MarkdownParser(BaseModel):
 
         return result
 
-    def max_number_of_stories_in_each_release(self):
+    def _max_number_of_stories_in_each_release(self) -> list[float]:
         """Identify maximum number of stories in each release
 
         Examples:
-            >>> max_number_of_stories_in_each_release("## Task1\nStory1\n---Story2\n## Task2\n---\nStory3\nStory4")
+            >>> _max_number_of_stories_in_each_release("## Task1\nStory1\n---Story2\n## Task2\n---\nStory3\nStory4")
             [1, 2]
 
         """
         # e.g. ['## Task1', 'Story1', '---', 'Story2', ...]
-        tasks_and_stories = self.extract_tasks_and_stories()
+        tasks_and_stories = self._extract_tasks_and_stories()
 
         stories: list[list[str]] = []
         # Temporary list

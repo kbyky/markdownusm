@@ -51,6 +51,8 @@ Story 5!
 ---
 ---
 Story 6 &lt;br&gt; Next line
+<!-- Story can change their colors by setting hex code following story title -->
+Story 7 #a6dfb5
 ```
 
 ### Run it

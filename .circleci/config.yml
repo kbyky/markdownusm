@@ -18,8 +18,43 @@ jobs:
       - codecov/upload:
           file: ./coverage.xml
 
+  upload-testpypi:
+    docker:
+      - image: circleci/python:3.9.2-node-browsers-legacy
+    steps:
+      - checkout
+      - run:
+          command: |
+            poetry config repositories.testpypi https://test.pypi.org/legacy/
+            poetry config pypi-token.testpypi "${TEST_PYPI_TOKEN}"
+            poetry publish --build -r testpypi
+
+  upload-pypi:
+    docker:
+      - image: circleci/python:3.9.2-node-browsers-legacy
+    steps:
+      - checkout
+      - run:
+          command: |
+            poetry config pypi-token.testpypi "${PYPI_TOKEN}"
+            poetry publish --build
+
 workflows:
   version: 2
   test:
     jobs:
       - test
+      - upload-testpypi:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                develop
+      - upload-pypi:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                main

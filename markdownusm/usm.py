@@ -12,6 +12,7 @@ U = Union[str, float]
 
 class Usm(BaseModel):
     source: list[dict[str, U]]
+    # Source list with absolute position
     source_abs: Optional[list[dict[str, U]]]
 
     start_x: float = 290
@@ -22,18 +23,36 @@ class Usm(BaseModel):
 
     padding: float = 20
 
+    activity_fill_color: str = "#1F568A"
+    activity_font_color: str = "#FFFFFF"
+
+    task_fill_color: str = "#3288C4"
+    task_font_color: str = "#FFFFFF"
+
+    release_text_fill_color: str = "none"
+    release_text_font_color: str = "#7B8EA0"
+    release_text_stroke_color: str = "none"
+
+    release_bar_stroke_color: str = "#5F5F63"
+
+    story_font_color: str = "#5F5F63"
+    story_default_fill_color: str = "#ebf4fa"
+    story_warning_fill_color: str = "#f8d7da"
+
     def __init__(self, **data):
         super().__init__(**data)
 
         self.source_abs = [self._update_dic(dic) for dic in self.source]
 
     def to_activities(self) -> list[Rectangle]:
-        colors = dict(fillColor="#1F568A", fontColor="#FFFFFF")
+        colors = dict(
+            fillColor=self.activity_fill_color, fontColor=self.activity_font_color
+        )
 
         return [Rectangle(**(dic | colors)) for dic in self.source_abs]
 
     def to_tasks(self) -> list[Rectangle]:
-        colors = dict(fillColor="#3288C4", fontColor="#FFFFFF")
+        colors = dict(fillColor=self.task_fill_color, fontColor=self.task_font_color)
 
         return [Rectangle(**(dic | colors)) for dic in self.source_abs]
 
@@ -44,14 +63,19 @@ class Usm(BaseModel):
         ]
 
     def to_release_texts(self) -> list[Rectangle]:
-        colors = dict(fillColor="none", fontColor="#7B8EA0", strokeColor="none")
+        colors = dict(
+            fillColor=self.release_text_fill_color,
+            fontColor=self.release_text_font_color,
+            strokeColor=self.release_text_stroke_color,
+        )
 
         return [Rectangle(**(dic | colors)) for dic in self.source_abs]
 
     def to_release_bars(self) -> list[Line]:
-        colors = dict(strokeColor="#5F5F63", shadow=1)
+        colors = dict(strokeColor=self.release_bar_stroke_color, shadow=1)
 
         return [Line(**dic | colors) for dic in self.source_abs]
+
     def _relative_to_absolute_vertical(self, y: float) -> float:
         """Convert relative vertical position to absolute position"""
         return self.start_y + (self.height + self.padding) * y
@@ -97,13 +121,22 @@ class Usm(BaseModel):
 
         """
         result: dict[str, U] = source_dic.copy()
-        result = result | dict(fontColor="#5F5F63")
 
-        if (story := str(result.get("text")))[-1] == "!":
-            result = result | dict(text=story[:-1])
-            result = result | dict(fillColor="#f8d7da")
-        else:
-            result = result | dict(fillColor="#ebf4fa")
+        update_dic = dict(
+            fontColor=self.story_font_color, fillColor=self.story_default_fill_color
+        )
+        story_text = str(result.get("text"))
 
-        return result
+        if story_text[-1] == "!":
+            # If story's suffix is `!`
+            update_dic = update_dic | dict(
+                text=story_text[:-1], fillColor=self.story_warning_fill_color
+            )
+        elif "#" in story_text:
+            # If story has hex color code in suffix
+            update_dic = update_dic | dict(
+                text=story_text.split("#")[0].strip(),
+                fillColor="#" + story_text.split("#")[1].strip(),
+            )
 
+        return result | update_dic
