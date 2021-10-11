@@ -75,5 +75,3 @@ $ musm -o sample.dio sample.md
 
 ## License
 This project is licensed under the terms of the MIT license.
-
-# Library RSS

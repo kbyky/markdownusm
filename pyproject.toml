@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "markdownusm"
-version = "0.1.0-1"
+version = "0.1.0-2"
 description = "MarkdownUSM is the best way to draw a beautiful user story mapping diagram from simple markdown file."
 authors = ["kbyky <kbyky36@gmail.com>"]
 license = "MIT"
