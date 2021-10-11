@@ -52,6 +52,7 @@ class Usm(BaseModel):
         colors = dict(strokeColor="#5F5F63", shadow=1)
 
         return [Line(**dic | colors) for dic in self.source_abs]
+
     def _relative_to_absolute_vertical(self, y: float) -> float:
         """Convert relative vertical position to absolute position"""
         return self.start_y + (self.height + self.padding) * y
@@ -102,8 +103,10 @@ class Usm(BaseModel):
         if (story := str(result.get("text")))[-1] == "!":
             result = result | dict(text=story[:-1])
             result = result | dict(fillColor="#f8d7da")
+        elif "#" in (story := str(result.get("text"))):
+            result = result | dict(text=story.split("#")[0].strip())
+            result = result | dict(fillColor="#a6dfb5")
         else:
             result = result | dict(fillColor="#ebf4fa")
 
         return result
-
