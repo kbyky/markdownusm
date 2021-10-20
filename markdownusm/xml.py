@@ -49,7 +49,12 @@ class Rectangle(XMLObject):
         """
 
     def _geometry(self) -> str:
-        """Position settings"""
+        """Position settings
+        
+        Examples:
+            >>> _geometry()
+            'x="0.0" y="0.0" width="140" height="60"'
+        """
         dic = dict(x=self.x, y=self.y, width=self.width, height=self.height)
         return " ".join([f'{k}="{str(v)}"' for k, v in dic.items()])
 
