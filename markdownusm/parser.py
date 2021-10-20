@@ -235,8 +235,9 @@ class MarkdownParser(BaseModel):
 
         return result
 
+    @staticmethod
     def _extend_list(
-        self, source: list[int], disirable_length: int, complement: int = 0
+        source: list[int], disirable_length: int, complement: int = 0
     ) -> list[int]:
         """Extend list for arranging in numbers
 
