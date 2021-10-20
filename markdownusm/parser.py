@@ -32,10 +32,10 @@ class MarkdownParser(BaseModel):
         
         Examples:
             >>> extract_activities_with_position()
-        [
-            {"text": "Activity1", "x": 0, "y": 0},
-            {"text": "Activity2", "x": 2, "y": 0},
-        ]
+            [
+                {"text": "Activity1", "x": 0, "y": 0},
+                {"text": "Activity2", "x": 2, "y": 0},
+            ]
 
         """
         tasks: list[str] = self._extract_tasks()
@@ -51,11 +51,11 @@ class MarkdownParser(BaseModel):
 
         Examples:
             >>> extract_tasks_with_position()
-        [
-            {"text": "Task1", "x": 0, "y": 1},
-            {"text": "Task2", "x": 1, "y": 1},
-            {"text": "Task3", "x": 2, "y": 1},
-        ]
+            [
+                {"text": "Task1", "x": 0, "y": 1},
+                {"text": "Task2", "x": 1, "y": 1},
+                {"text": "Task3", "x": 2, "y": 1},
+            ]
 
         """
         tasks: list[str] = self._extract_tasks()
@@ -67,11 +67,11 @@ class MarkdownParser(BaseModel):
 
         Examples:
             >>> extract_stories_with_position()
-        [
-            {"text": "Story1", "x": 0, "y": 2},
-            {"text": "Story2", "x": 1, "y": 2},
-            {"text": "Story3", "x": 2, "y": 3},
-        ]
+            [
+                {"text": "Story1", "x": 0, "y": 2},
+                {"text": "Story2", "x": 1, "y": 2},
+                {"text": "Story3", "x": 2, "y": 3},
+            ]
 
         """
 
@@ -227,51 +227,6 @@ class MarkdownParser(BaseModel):
             )
         )
 
-    def _divide_list_by_prefix(self, target: list[str], prefix: str) -> list[list[str]]:
-        """Split a list into multiple lists wrapped as a list
-
-        Examples:
-            >>> _divide_list_by_prefix(["Story1", "---", "Story2"], "---")
-            [["Story1"], ["Story2"]]
-
-            >>> _divide_list_by_prefix(["---", "Story2"], "---")
-            [[], ["Story2"]]
-
-        """
-        result: list[list[str]] = []
-        child: list[str] = []
-
-        for item in target:
-            if item.startswith(prefix):
-                result.append(child)
-                child = []
-            else:
-                child.append(item)
-        result.append(child)
-
-        return result
-
-    @staticmethod
-    def _extend_list(
-        source: list[int], disirable_length: int, complement: int = 0
-    ) -> list[int]:
-        """Extend list for arranging in numbers
-
-        Example:
-            >>> _extend_list([1, 2], 4)
-            [1, 2, 0, 0]
-
-        """
-        if len(source) >= disirable_length:
-            return source
-
-        result = [0 for x in range(disirable_length)]
-
-        for i in range(len(source)):
-            result[i] = source[i]
-
-        return result
-
     def _max_number_of_stories_in_each_release(self) -> list[float]:
         """Identify maximum number of stories in each release
 
@@ -321,3 +276,49 @@ class MarkdownParser(BaseModel):
 
         # Extract maximum number of each release
         return list(map(lambda x: max(x), zip(*number_of_stories_in_releases)))
+
+    @staticmethod
+    def _divide_list_by_prefix(target: list[str], prefix: str) -> list[list[str]]:
+        """Split a list into multiple lists wrapped as a list
+
+        Examples:
+            >>> _divide_list_by_prefix(["Story1", "---", "Story2"], "---")
+            [["Story1"], ["Story2"]]
+
+            >>> _divide_list_by_prefix(["---", "Story2"], "---")
+            [[], ["Story2"]]
+
+        """
+        result: list[list[str]] = []
+        child: list[str] = []
+
+        for item in target:
+            if item.startswith(prefix):
+                result.append(child)
+                child = []
+            else:
+                child.append(item)
+        result.append(child)
+
+        return result
+
+    @staticmethod
+    def _extend_list(
+        source: list[int], disirable_length: int, complement: int = 0
+    ) -> list[int]:
+        """Extend list for arranging in numbers
+
+        Example:
+            >>> _extend_list([1, 2], 4)
+            [1, 2, 0, 0]
+
+        """
+        if len(source) >= disirable_length:
+            return source
+
+        result = [0 for x in range(disirable_length)]
+
+        for i in range(len(source)):
+            result[i] = source[i]
+
+        return result
