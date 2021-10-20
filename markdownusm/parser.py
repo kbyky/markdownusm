@@ -10,6 +10,8 @@ U = Union[str, float]
 
 class MarkdownParser(BaseModel):
     markdown: str = Field(title="Text written in markdown")
+
+    # Lines without blank and comments, populated by constructor
     lines: Optional[list[str]] = Field(
         title="List of markdown lines without blanks and comments"
     )
@@ -26,11 +28,15 @@ class MarkdownParser(BaseModel):
         )
 
     def extract_activities_with_position(self) -> list[dict[str, U]]:
-        """
+        """Create list of dicts whose keys are activities' texts and positions
+        
+        Examples:
+            >>> extract_activities_with_position()
         [
             {"text": "Activity1", "x": 0, "y": 0},
             {"text": "Activity2", "x": 2, "y": 0},
         ]
+
         """
         tasks: list[str] = self._extract_tasks()
         activities_with_tasks: dict[str, str] = self._extract_activities_with_tasks()
@@ -41,18 +47,26 @@ class MarkdownParser(BaseModel):
         ]
 
     def extract_tasks_with_position(self) -> list[dict[str, U]]:
-        """
+        """Create list of dicts whose keys are tasks' texts and positions
+
+        Examples:
+            >>> extract_tasks_with_position()
         [
             {"text": "Task1", "x": 0, "y": 1},
             {"text": "Task2", "x": 1, "y": 1},
             {"text": "Task3", "x": 2, "y": 1},
         ]
+
         """
         tasks: list[str] = self._extract_tasks()
+
         return [dict(text=task, x=i, y=1) for i, task in enumerate(tasks)]
 
     def extract_stories_with_position(self) -> list[dict[str, U]]:
-        """
+        """Create list of dicts whose keys are stories' texts and positions
+
+        Examples:
+            >>> extract_stories_with_position()
         [
             {"text": "Story1", "x": 0, "y": 2},
             {"text": "Story2", "x": 1, "y": 2},
@@ -60,6 +74,7 @@ class MarkdownParser(BaseModel):
         ]
 
         """
+
         # tasks_and_stories: ['## Task', 'Story', '---', 'Story', ...]
         tasks_and_stories = self._extract_tasks_and_stories()
 
@@ -86,6 +101,7 @@ class MarkdownParser(BaseModel):
         ]
         """
 
+        # Get maximum number of stories to identify release bars positions
         number_of_stories_in_each_release = (
             self._max_number_of_stories_in_each_release()
         )
