@@ -150,7 +150,7 @@ class MarkdownParser(BaseModel):
         ]
 
     def _extract_tasks(self) -> list[str]:
-        """Create task list from markdonw
+        """Create task list from markdown
 
         Examples:
             >>> _extract_tasks("#Activity\n## Task1\n## Task2")
