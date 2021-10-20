@@ -10,6 +10,8 @@ U = Union[str, float]
 
 class MarkdownParser(BaseModel):
     markdown: str = Field(title="Text written in markdown")
+
+    # Lines without blank and comments, populated by constructor
     lines: Optional[list[str]] = Field(
         title="List of markdown lines without blanks and comments"
     )
@@ -26,11 +28,15 @@ class MarkdownParser(BaseModel):
         )
 
     def extract_activities_with_position(self) -> list[dict[str, U]]:
-        """
-        [
-            {"text": "Activity1", "x": 0, "y": 0},
-            {"text": "Activity2", "x": 2, "y": 0},
-        ]
+        """Create list of dicts whose keys are activities' texts and positions
+        
+        Examples:
+            >>> extract_activities_with_position()
+            [
+                {"text": "Activity1", "x": 0, "y": 0},
+                {"text": "Activity2", "x": 2, "y": 0},
+            ]
+
         """
         tasks: list[str] = self._extract_tasks()
         activities_with_tasks: dict[str, str] = self._extract_activities_with_tasks()
@@ -41,25 +47,34 @@ class MarkdownParser(BaseModel):
         ]
 
     def extract_tasks_with_position(self) -> list[dict[str, U]]:
-        """
-        [
-            {"text": "Task1", "x": 0, "y": 1},
-            {"text": "Task2", "x": 1, "y": 1},
-            {"text": "Task3", "x": 2, "y": 1},
-        ]
+        """Create list of dicts whose keys are tasks' texts and positions
+
+        Examples:
+            >>> extract_tasks_with_position()
+            [
+                {"text": "Task1", "x": 0, "y": 1},
+                {"text": "Task2", "x": 1, "y": 1},
+                {"text": "Task3", "x": 2, "y": 1},
+            ]
+
         """
         tasks: list[str] = self._extract_tasks()
+
         return [dict(text=task, x=i, y=1) for i, task in enumerate(tasks)]
 
     def extract_stories_with_position(self) -> list[dict[str, U]]:
-        """
-        [
-            {"text": "Story1", "x": 0, "y": 2},
-            {"text": "Story2", "x": 1, "y": 2},
-            {"text": "Story3", "x": 2, "y": 3},
-        ]
+        """Create list of dicts whose keys are stories' texts and positions
+
+        Examples:
+            >>> extract_stories_with_position()
+            [
+                {"text": "Story1", "x": 0, "y": 2},
+                {"text": "Story2", "x": 1, "y": 2},
+                {"text": "Story3", "x": 2, "y": 3},
+            ]
 
         """
+
         # tasks_and_stories: ['## Task', 'Story', '---', 'Story', ...]
         tasks_and_stories = self._extract_tasks_and_stories()
 
@@ -86,6 +101,7 @@ class MarkdownParser(BaseModel):
         ]
         """
 
+        # Get maximum number of stories to identify release bars positions
         number_of_stories_in_each_release = (
             self._max_number_of_stories_in_each_release()
         )
@@ -150,7 +166,7 @@ class MarkdownParser(BaseModel):
         ]
 
     def _extract_tasks(self) -> list[str]:
-        """Create task list from markdonw
+        """Create task list from markdown
 
         Examples:
             >>> _extract_tasks("#Activity\n## Task1\n## Task2")
@@ -211,50 +227,6 @@ class MarkdownParser(BaseModel):
             )
         )
 
-    def _divide_list_by_prefix(self, target: list[str], prefix: str) -> list[list[str]]:
-        """Split a list into multiple lists wrapped as a list
-
-        Examples:
-            >>> _divide_list_by_prefix(["Story1", "---", "Story2"], "---")
-            [["Story1"], ["Story2"]]
-
-            >>> _divide_list_by_prefix(["---", "Story2"], "---")
-            [[], ["Story2"]]
-
-        """
-        result: list[list[str]] = []
-        child: list[str] = []
-
-        for item in target:
-            if item.startswith(prefix):
-                result.append(child)
-                child = []
-            else:
-                child.append(item)
-        result.append(child)
-
-        return result
-
-    def _extend_list(
-        self, source: list[int], disirable_length: int, complement: int = 0
-    ) -> list[int]:
-        """Extend list for arranging in numbers
-
-        Example:
-            >>> _extend_list([1, 2], 4)
-            [1, 2, 0, 0]
-
-        """
-        if len(source) >= disirable_length:
-            return source
-
-        result = [0 for x in range(disirable_length)]
-
-        for i in range(len(source)):
-            result[i] = source[i]
-
-        return result
-
     def _max_number_of_stories_in_each_release(self) -> list[float]:
         """Identify maximum number of stories in each release
 
@@ -304,3 +276,49 @@ class MarkdownParser(BaseModel):
 
         # Extract maximum number of each release
         return list(map(lambda x: max(x), zip(*number_of_stories_in_releases)))
+
+    @staticmethod
+    def _divide_list_by_prefix(target: list[str], prefix: str) -> list[list[str]]:
+        """Split a list into multiple lists wrapped as a list
+
+        Examples:
+            >>> _divide_list_by_prefix(["Story1", "---", "Story2"], "---")
+            [["Story1"], ["Story2"]]
+
+            >>> _divide_list_by_prefix(["---", "Story2"], "---")
+            [[], ["Story2"]]
+
+        """
+        result: list[list[str]] = []
+        child: list[str] = []
+
+        for item in target:
+            if item.startswith(prefix):
+                result.append(child)
+                child = []
+            else:
+                child.append(item)
+        result.append(child)
+
+        return result
+
+    @staticmethod
+    def _extend_list(
+        source: list[int], disirable_length: int, complement: int = 0
+    ) -> list[int]:
+        """Extend list for arranging in numbers
+
+        Example:
+            >>> _extend_list([1, 2], 4)
+            [1, 2, 0, 0]
+
+        """
+        if len(source) >= disirable_length:
+            return source
+
+        result = [0 for x in range(disirable_length)]
+
+        for i in range(len(source)):
+            result[i] = source[i]
+
+        return result

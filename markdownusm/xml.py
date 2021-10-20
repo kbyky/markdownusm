@@ -49,7 +49,12 @@ class Rectangle(XMLObject):
         """
 
     def _geometry(self) -> str:
-        """Position settings"""
+        """Position settings
+        
+        Examples:
+            >>> _geometry()
+            'x="0.0" y="0.0" width="140" height="60"'
+        """
         dic = dict(x=self.x, y=self.y, width=self.width, height=self.height)
         return " ".join([f'{k}="{str(v)}"' for k, v in dic.items()])
 
@@ -126,10 +131,6 @@ class XMLObjects(BaseModel):
     </mxfile>
     """
 
-    def _shapes_to_xml(self) -> list[str]:
-        """Create XML string list"""
-        return [x.to_xml() for x in self.shapes]
-
     def render(self) -> str:
         """Render XML objects
 
@@ -140,3 +141,7 @@ class XMLObjects(BaseModel):
         template = Environment(loader=BaseLoader()).from_string(self.xml_template)
 
         return template.render(shapes=self._shapes_to_xml())
+
+    def _shapes_to_xml(self) -> list[str]:
+        """Create XML string list"""
+        return [x.to_xml() for x in self.shapes]
