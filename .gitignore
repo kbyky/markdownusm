@@ -131,3 +131,5 @@ dmypy.json
 
 # Working direcotry
 .tmp/
+
+.DS_Store
