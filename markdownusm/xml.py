@@ -131,10 +131,6 @@ class XMLObjects(BaseModel):
     </mxfile>
     """
 
-    def _shapes_to_xml(self) -> list[str]:
-        """Create XML string list"""
-        return [x.to_xml() for x in self.shapes]
-
     def render(self) -> str:
         """Render XML objects
 
@@ -145,3 +141,7 @@ class XMLObjects(BaseModel):
         template = Environment(loader=BaseLoader()).from_string(self.xml_template)
 
         return template.render(shapes=self._shapes_to_xml())
+
+    def _shapes_to_xml(self) -> list[str]:
+        """Create XML string list"""
+        return [x.to_xml() for x in self.shapes]
