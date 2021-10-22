@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 
 import argparse
+import sys
 
 from markdownusm.parser import MarkdownParser
 from markdownusm.usm import Usm
 from markdownusm.xml import XMLObjects
 
 parser = argparse.ArgumentParser()
-parser.add_argument("file", type=argparse.FileType("r"))
+parser.add_argument(
+    "file",
+    type=argparse.FileType("r", encoding=sys.getdefaultencoding(), errors="ignore"),
+)
 parser.add_argument("-o", required=False, type=argparse.FileType("w"))
 args = parser.parse_args()
 
