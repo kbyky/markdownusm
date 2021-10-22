@@ -12,7 +12,7 @@ parser.add_argument(
     "file",
     type=argparse.FileType("r", encoding=sys.getdefaultencoding(), errors="ignore"),
 )
-parser.add_argument("-o", required=False, type=argparse.FileType("w"))
+parser.add_argument("-o", required=False, type=argparse.FileType("w", encoding="utf-8"))
 args = parser.parse_args()
 
 
