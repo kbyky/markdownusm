@@ -8,6 +8,19 @@ from markdownusm.parser import MarkdownParser
     "markdown, expected",
     [
         (
+            "\nline1\n<!--comment\ncomment\n  comment-->\nline2\n<!--\n-->\n\n<!---->line3",
+            "\nline1\n\nline2\n\n\nline3",
+        )
+    ],
+)
+def test_remove_html_comment(markdown, expected):
+    assert MarkdownParser._remove_html_comment(markdown) == expected
+
+
+@pytest.mark.parametrize(
+    "markdown, expected",
+    [
+        (
             "line1\nline2\nline3\n\n<!-- -->\nline4",
             4,
         ),
