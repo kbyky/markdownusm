@@ -23,13 +23,19 @@ class MarkdownParser(BaseModel):
         self.lines = list(
             filter(
                 lambda x: x.strip() != "" and not x.startswith("<!--"),
-                self.markdown.split("\n"),
+                self._remove_html_comment(self.markdown).split("\n"),
             )
         )
 
+    @staticmethod
+    def _remove_html_comment(target: str) -> str:
+        import re
+
+        return re.sub(r"<!--[\s\S]*?-->", "", target)
+
     def extract_activities_with_position(self) -> list[dict[str, U]]:
         """Create list of dicts whose keys are activities' texts and positions
-        
+
         Examples:
             >>> extract_activities_with_position()
             [
