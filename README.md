@@ -47,6 +47,9 @@ Story 4
 <!-- Suffix `!` changes story postit color for warning -->
 Story 5!
 
+<!--
+Multiple line comments
+-->
 # Activity 2
 ## Task 3
 ---
