@@ -8,7 +8,7 @@ from markdownusm.parser import MarkdownParser
     "markdown, expected",
     [
         (
-            "\nline1\n<!--comment\ncomment\n  comment-->\nline2\n<!--\n-->\n\n<!---->line3",
+            "\nline1\n<!--comment\n---comment\n  comment-->\nline2\n<!--\n-->\n\n<!---->line3",
             "\nline1\n\nline2\n\n\nline3",
         )
     ],
